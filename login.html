@@ -1,1 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login - SkillShareHub</title>
+  <link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body data-page="login" class="login-body">
+  <div class="login-wrapper">
+    <div class="login-card card">
+      <h1>Welcome back</h1>
+      <p class="muted">Login to continue</p>
+      <form id="loginForm" class="simple-form">
+        <label>Username
+          <input type="text" id="username" placeholder="e.g. Priya" required />
+        </label>
+        <label>Password
+          <input type="password" id="password" placeholder="Enter your password" required />
+        </label>
+        <button type="submit" class="btn primary wide">Login</button>
+      </form>
+      <p class="hint">Don't have an account? <a href="register.html">Register now</a></p>
+    </div>
+  </div>
+  <script src="script.js"></script>
+  <script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'en', // The original language of your site
+    includedLanguages: 'bn,gu,hi,kn,ml,mr,pa,ta,te', // Specific Indian languages
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+    autoDisplay: false
+  }, 'google_translate_element');
+}
+</script>
 
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>
