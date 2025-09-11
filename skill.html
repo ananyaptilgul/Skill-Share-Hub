@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Skill Details</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body data-page="skill">
+    <header class="site-header" id="header-placeholder"></header>
+    <main>
+        <div id="skillContent" class="card"></div>
+        <div class="skill-page-grid">
+            <div class="skill-main">
+                <div id="video-section" class="video-container card"></div>
+                <div id="notes-section" class="notes-container card">
+                    <h3>Your Personal Notes</h3>
+                    <textarea id="skill-notes" placeholder="Write your notes..."></textarea>
+                    <button id="download-notes" class="btn primary">Download Notes</button>
+                    <p id="save-status"></p>
+                </div>
+            </div>
+            <div class="skill-sidebar">
+                <div id="roadmap-container" class="roadmap-container card"></div>
+                <div id="tutors-section" class="tutors-container card"></div>
+            </div>
+        </div>
+        <div id="recommended-section" class="recommended-container"></div>
+        <a href="browse.html" class="btn" style="margin-top: 20px;">← Back to Skills</a>
+    </main>
+    <footer class="site-footer" id="footer-placeholder"></footer>
+    <script src="script.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const params = new URLSearchParams(window.location.search);
+        const skillName = params.get("name");
+        const skill = getSkillByName(skillName);
+        if (!skill) {
+            document.getElementById("skillContent").innerHTML = `<h2>Skill Not Found</h2>`;
+            return;
+        }
+
+        const renderDetails = () => {
+            $("#skillContent").innerHTML = `<h2><i class="${skill.icon}"></i> ${skillName}</h2><p>${skill.desc}</p><h3>Key Benefits:</h3><ul>${skill.benefits.map(b => `<li>${b}</li>`).join("")}</ul>`;
+        };
+        
+        const renderVideo = () => {
+            $("#video-section").innerHTML = `<h3>Starter Tutorial</h3><div class="video-wrapper"><iframe src="${skill.video}" title="${skillName} video" frameborder="0" allowfullscreen></iframe></div>`;
+        };
+
+        const renderNearbyTutors = () => {
+            const container = $("#tutors-section");
+            const currentUser = getUser();
+            const allUsers = getUsersDB();
+            const currentUserData = allUsers.find(u => u.username === currentUser);
+
+            if (!currentUserData?.state) {
+                container.innerHTML = '<h3>Tutors</h3><p class="muted">Set your state in your profile to find local tutors.</p>';
+                return;
+            }
+
+            const tutors = allUsers.reduce((acc, user) => {
+                if (user.username !== currentUser && user.state === currentUserData.state) {
+                    const profile = JSON.parse(localStorage.getItem(`skillsharehub_profile_${user.username}`) || "{}");
+                    if (profile.teachableSkills?.includes(skillName)) {
+                        const reviews = profile.reviews || [];
+                        const avgRating = reviews.length > 0 ? (reviews.reduce((a, r) => a + r.rating, 0) / reviews.length).toFixed(1) : 'No ratings';
+                        acc.push({ username: user.username, avgRating });
+                    }
+                }
+                return acc;
+            }, []);
+
+            let html = `<h3>Tutors in ${currentUserData.state}</h3>`;
+            if (tutors.length > 0) {
+                html += `<ul class="tutor-list">${tutors.map(t => `
+                    <li>
+                        <div class="tutor-info">
+                            <a href="profile.html?user=${t.username}" class="tutor-link">
+                                <i class="fa-solid fa-user"></i> <strong>${t.username}</strong> (${t.avgRating} ★)
+                            </a>
+                            <div>
+                                <button class="btn small review-btn" data-tutor="${t.username}">Review</button>
+                                <button class="btn small primary send-message-btn" data-tutor="${t.username}">Send Message</button>
+                            </div>
+                        </div>
+                    </li>`).join('')}</ul>`;
+            } else {
+                html += `<p class="muted">No tutors found for this skill in your state.</p>`;
+            }
+            container.innerHTML = html;
+        };
+
+        const initNotes = () => {
+            const notesBox = $("#skill-notes"), statusEl = $("#save-status"), downloadBtn = $("#download-notes"), notesKey = `notes_${skillName}`;
+            if (!notesBox) return;
+            notesBox.value = localStorage.getItem(notesKey) || skill.noteTemplate;
+            notesBox.addEventListener("input", () => {
+                localStorage.setItem(notesKey, notesBox.value);
+                statusEl.textContent = "Notes auto-saved ✔";
+                setTimeout(() => { statusEl.textContent = ""; }, 2000);
+            });
+            downloadBtn.addEventListener("click", () => {
+                const blob = new Blob([notesBox.value], { type: "text/plain" }), url = URL.createObjectURL(blob), a = document.createElement("a");
+                a.href = url; a.download = `${skillName}_notes.txt`; a.click(); URL.revokeObjectURL(url);
+            });
+        };
+
+        const initRoadmap = () => {
+            const container = $("#roadmap-container");
+            if (!container) return;
+            const currentUser = getUser();
+            const progressKey = `skillsharehub_progress_${currentUser}`;
+            let userProgress = JSON.parse(localStorage.getItem(progressKey) || "{}");
+            let skillProgress = userProgress[skillName] || [];
+            const updateProgress = () => {
+                const checkedCount = $all('#roadmap-list input:checked').length;
+                const totalCount = skill.roadmap.length;
+                const progressEl = $('#roadmap-progress');
+                progressEl.value = checkedCount;
+                progressEl.max = totalCount;
+            };
+            let html = `<div class="roadmap-header"><h3>Learning Roadmap</h3><progress id="roadmap-progress" value="0" max="${skill.roadmap.length}"></progress></div><div id="roadmap-list" class="roadmap-list">`;
+            html += skill.roadmap.map(item => `<label><input type="checkbox" data-item="${item}" ${skillProgress.includes(item) ? 'checked' : ''}> ${item}</label>`).join('');
+            html += `</div>`;
+            container.innerHTML = html;
+            $all('#roadmap-list input').forEach(checkbox => {
+                checkbox.addEventListener('change', (e) => {
+                    const item = e.target.dataset.item;
+                    const isChecked = e.target.checked;
+                    userProgress = JSON.parse(localStorage.getItem(progressKey) || "{}");
+                    if (!userProgress[skillName]) userProgress[skillName] = [];
+                    skillProgress = userProgress[skillName];
+                    const itemIndex = skillProgress.indexOf(item);
+                    if (isChecked && itemIndex === -1) {
+                        skillProgress.push(item);
+                        updateScore(currentUser, 20, "Roadmap");
+                        alert("Great job! +20 points for completing a roadmap item.");
+                    } else if (!isChecked && itemIndex > -1) {
+                        skillProgress.splice(itemIndex, 1);
+                    }
+                    userProgress[skillName] = skillProgress;
+                    localStorage.setItem(progressKey, JSON.stringify(userProgress));
+                    updateProgress();
+                });
+            });
+            updateProgress();
+        };
+        
+        const renderRecommendations = () => {
+            const container = $("#recommended-section");
+            if (!container || !skill.recommendations || skill.recommendations.length === 0) return;
+            const recsHtml = skill.recommendations.map(rec => {
+                const recSkill = getSkillByName(rec.name);
+                if (!recSkill) return '';
+                return `<div class="rec-card card"><h4><i class="${recSkill.icon}"></i> ${rec.name}</h4><p>${recSkill.desc}</p><a class="btn small primary" href="skill.html?name=${rec.name}">Learn More</a></div>`;
+            }).join("");
+            container.innerHTML = `<h2>Recommended Next Skills</h2><div class="rec-grid">${recsHtml}</div>`;
+        };
+        document.body.addEventListener('click', (e) => {
+            if (e.target.matches('.review-btn')) {
+                const tutorName = e.target.dataset.tutor;
+                const currentUser = getUser();
+                if (tutorName === currentUser) { alert("You cannot review yourself."); return; }
+                const rating = parseInt(prompt(`Rate ${tutorName} from 1 to 5 stars:`));
+                if (rating >= 1 && rating <= 5) {
+                    const comment = prompt("Leave a short review comment:");
+                    if (comment) {
+                        const tutorProfileKey = `skillsharehub_profile_${tutorName}`;
+                        const tutorProfile = JSON.parse(localStorage.getItem(tutorProfileKey) || "{}");
+                        if (!tutorProfile.reviews) tutorProfile.reviews = [];
+                        tutorProfile.reviews.push({ from: currentUser, rating, comment });
+                        localStorage.setItem(tutorProfileKey, JSON.stringify(tutorProfile));
+                        alert("Thank you for your review!");
+                        renderNearbyTutors();
+                    }
+                } else {
+                    alert("Invalid rating. Please enter a number between 1 and 5.");
+                }
+            }
+            if (e.target.matches('.send-message-btn')) {
+                const tutorName = e.target.dataset.tutor;
+                const studentName = getUser();
+                if (tutorName === studentName) { alert("You cannot send a message to yourself."); return; }
+                const messageText = prompt(`Type your message for ${tutorName}:`);
+                if (messageText && messageText.trim() !== '') {
+                    sendMessage(studentName, tutorName, messageText);
+                    alert("Your message has been sent!");
+                }
+            }
+        });
+        
+        document.title = `${skillName} - SkillShareHub`;
+        renderDetails(); 
+        renderVideo(); 
+        initNotes(); 
+        initRoadmap(); 
+        renderRecommendations(); 
+        renderNearbyTutors();
+    });
+</script>
+</body>
+</html>
