@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Dashboard - SkillShareHub</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="dashboard">
+    <header class="site-header" id="header-placeholder"></header>
+    <main>
+        <h1>My Analytics Dashboard</h1>
+        <div class="grid-container-2col">
+            <div class="card">
+                <h3>Points by Activity</h3>
+                <div class="chart-container">
+                    <canvas id="pointsPieChart"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Skill Roadmap Progress</h3>
+                <div class="chart-container">
+                    <canvas id="progressRadarChart"></canvas>
+                </div>
+            </div>
+            <div class="card" id="tutor-dashboard-card" style="display: none;">
+    <h3>My Tutor Analytics</h3>
+    <div id="tutor-stats"></div>
+</div>
+        </div>
+    </main>
+    <footer class="site-footer" id="footer-placeholder"></footer>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
