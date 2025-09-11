@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Live Help Session</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        video { width: 100%; border-radius: 8px; background: var(--pill); transform: scaleX(-1); }
+        h2 { text-align: center; }
+        .card { max-width: 90vw; }
+    </style>
+</head>
+<body class="login-body">
+    <main>
+        <div class="card">
+            <h2>Live Session</h2>
+            <p id="status" style="text-align: center; color: var(--muted);">Initializing...</p>
+            <div class="video-grid">
+                <div>
+                    <h3>You</h3>
+                    <video id="localVideo" autoplay playsinline muted></video>
+                </div>
+                <div>
+                    <h3>Remote User</h3>
+                    <video id="remoteVideo" autoplay playsinline></video>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="session.js"></script>
+</body>
+</html>
