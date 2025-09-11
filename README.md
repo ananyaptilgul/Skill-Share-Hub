@@ -21,4 +21,4 @@ Skill Share Hub is a simple platform for learners and mentors to connect, share 
 This project is deployed on **Vercel**.  
 
 🔗 **Live Project Link:**  
-[https://skill-share-hub.vercel.app](https://skill-share-hub.vercel.app)  
+
