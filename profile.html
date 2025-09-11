@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>User Profile - SkillShareHub</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body data-page="profile">
+    <header class="site-header" id="header-placeholder"></header>
+    <main>
+        <div class="grid-container-2col">
+            <div class="card">
+                <h2 id="profile-title">My Profile</h2>
+                <form id="profileForm" class="simple-form">
+                    <label>Username (read-only)<input type="text" id="profileUsername" readonly /></label>
+                    <label>Email<input type="email" id="profileEmail" placeholder="your.email@example.com" /></label>
+                    <label>Phone<input type="tel" id="profilePhone" placeholder="+91..." /></label>
+                    <label>Occupation<input type="text" id="profileOccupation" placeholder="e.g., Student" /></label>
+                    <label>Hobbies<input type="text" id="profileHobbies" placeholder="e.g., Reading, Music" /></label>
+                    <label>Skills You Can Teach<input type="text" id="profileTeachable" placeholder="e.g., Python, Music" /></label>
+                    <button type="submit" class="btn primary">Save Profile</button>
+                </form>
+            </div>
+            <div class="card">
+                <h2>Rewards & Reviews</h2>
+                <div id="badges-container" class="badges-grid"></div>
+                <div id="reviews-container" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+        <div class="card">
+            <h2>Community Density Map</h2>
+            <div id="community-map-container"></div>
+            <div id="map-tooltip"></div>
+        </div>
+    </main>
+    <footer class="site-footer" id="footer-placeholder"></footer>
+    <script src="script.js"></script>
+</body>
+</html>
