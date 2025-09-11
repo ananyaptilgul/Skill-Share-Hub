@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Post a Tip - SkillShareHub</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body data-page="post">
+    <header class="site-header" id="header-placeholder"></header>
+    <main>
+        <section class="card">
+            <h2>Share a Tip</h2>
+            <form id="postForm" class="simple-form">
+                <label>Title
+                    <input type="text" id="postTitle" required />
+                </label>
+                <label>Your Tip
+                    <textarea id="postBody" rows="5" required></textarea>
+                </label>
+                <button class="btn primary" type="submit">Publish</button>
+            </form>
+            <h3 style="margin-top: 2rem;">Recent Tips</h3>
+            <ul id="postList"></ul>
+        </section>
+    </main>
+    <footer class="site-footer" id="footer-placeholder"></footer>
+    <script src="script.js"></script>
+</body>
+</html>
