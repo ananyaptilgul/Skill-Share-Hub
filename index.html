@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Home - SkillShareHub</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body data-page="home">
+    <header class="site-header" id="header-placeholder"></header>
+    <main>
+        <section class="hero card">
+            <h1>Find. Share. Learn.</h1>
+            <p>Build skills faster with curated categories, quick tips, and community posts.</p>
+            <a href="browse.html" class="btn primary">Browse Skills</a>
+        </section>
+        <div class="grid-container-2col">
+            <div class="card profile-card">
+                <h2>My Dashboard</h2>
+                <div><strong>Name:</strong> <span id="profileName">—</span></div>
+                <div style="margin-top: 0.5rem;"><strong>Total Score:</strong> <span id="weeklyScore">0</span></div>
+                <div class="profile-actions" style="margin-top: 1rem;">
+                    <button id="addScore10" class="btn small">+10 Practice Pts</button>
+                    <button id="resetScore" class="btn small">Reset</button>
+                </div>
+            </div>
+            <div id="challenge-card" class="card">
+                <h3>Daily Challenge</h3>
+                <h4 id="challenge-title" style="margin-top:0;">Loading title...</h4> 
+                <p>Loading description...</p>
+                <button class="btn primary small" style="margin-top: 1rem;">I've Completed It!</button>
+            </div>
+        </div>
+    </main>
+    <footer class="site-footer" id="footer-placeholder"></footer>
+    <script src="script.js"></script>
+</body>
+</html>
